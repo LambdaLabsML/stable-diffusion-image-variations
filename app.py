@@ -21,9 +21,9 @@ def main(
         )
 
     images = []
-    safe_image = Image.open(r"unsafe.png")
     for i, image in enumerate(images_list["sample"]):
         if(images_list["nsfw_content_detected"][i]):
+            safe_image = Image.open(r"unsafe.png")
             images.append(safe_image)
         else:
             images.append(image)
@@ -66,7 +66,7 @@ inputs = [
     gr.Slider(0, 25, value=3, step=1, label="Guidance scale"),
     gr.Slider(1, 4, value=1, step=1, label="Number images"),
     gr.Slider(5, 50, value=25, step=5, label="Steps"),
-    gr.Number(0, 1024, value=0, step=1, labal="Seed")
+    gr.Number(0, labal="Seed", precision=0)
 ]
 output = gr.Gallery(label="Generated variations")
 output.style(grid=2)
