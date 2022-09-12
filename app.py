@@ -8,10 +8,10 @@ def main(
     input_im,
     scale=3.0,
     n_samples=4,
-    seed=0,
     steps=25,
+    seed=0,
     ):
-    generator = torch.Generator(device=device).manual_seed(seed)
+    generator = torch.Generator(device=device).manual_seed(int(seed))
 
     images_list = pipe(
         n_samples*[input_im],
@@ -66,13 +66,7 @@ inputs = [
     gr.Slider(0, 25, value=3, step=1, label="Guidance scale"),
     gr.Slider(1, 4, value=1, step=1, label="Number images"),
     gr.Slider(5, 50, value=25, step=5, label="Steps"),
-    gr.Slider(
-            label="Seed",
-            minimum=0,
-            maximum=2147483647,
-            step=1,
-            randomize=True,
-        )
+    gr.Number(0, 1024, value=0, step=1, labal="Seed")
 ]
 output = gr.Gallery(label="Generated variations")
 output.style(grid=2)
