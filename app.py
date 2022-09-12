@@ -77,10 +77,10 @@ inputs = [
 output = gr.Gallery(label="Generated variations")
 output.style(grid=2)
 
-examples = [
-    ["assets/im-examples/vermeer.jpg", 3, 1, True, 25],
-    ["assets/im-examples/matisse.jpg", 3, 1, True, 25],
-]
+# examples = [
+#     ["assets/im-examples/vermeer.jpg", 3, 1, True, 25],
+#     ["assets/im-examples/matisse.jpg", 3, 1, True, 25],
+# ]
 
 demo = gr.Interface(
     fn=main,
@@ -89,6 +89,5 @@ demo = gr.Interface(
     article=article,
     inputs=inputs,
     outputs=output,
-    examples=examples,
     )
 demo.launch()
