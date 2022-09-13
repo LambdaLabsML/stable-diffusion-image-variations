@@ -54,7 +54,7 @@ Training was done on 4xA6000 GPUs on [Lambda GPU Cloud](https://lambdalabs.com/s
 More details on the method and training will come in a future blog post.
 """
 
-device = "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu"
 pipe = StableDiffusionImageEmbedPipeline.from_pretrained(
     "lambdalabs/sd-image-variations-diffusers",
     revision="273115e88df42350019ef4d628265b8c29ef4af5",
@@ -71,10 +71,10 @@ inputs = [
 output = gr.Gallery(label="Generated variations")
 output.style(grid=2)
 
-# examples = [
-#     ["assets/im-examples/vermeer.jpg", 3, 1, True, 25],
-#     ["assets/im-examples/matisse.jpg", 3, 1, True, 25],
-# ]
+examples = [
+    ["examples/vermeer.jpg", 3, 1, True, 25],
+    ["examples/matisse.jpg", 3, 1, True, 25],
+]
 
 demo = gr.Interface(
     fn=main,
@@ -83,5 +83,6 @@ demo = gr.Interface(
     article=article,
     inputs=inputs,
     outputs=output,
+    examples=examples,
     )
 demo.launch()

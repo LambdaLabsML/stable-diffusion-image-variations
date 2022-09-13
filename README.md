@@ -1,6 +1,6 @@
 ---
 title: Stable Diffusion Image Variations
-emoji: 🏃
+emoji: 🖼️
 colorFrom: purple
 colorTo: purple
 sdk: gradio
