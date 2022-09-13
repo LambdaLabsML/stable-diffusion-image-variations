@@ -72,8 +72,8 @@ output = gr.Gallery(label="Generated variations")
 output.style(grid=2)
 
 examples = [
-    ["examples/vermeer.jpg", 3, 1, True, 25],
-    ["examples/matisse.jpg", 3, 1, True, 25],
+    ["examples/vermeer.jpg", 3, 1, 25, 0],
+    ["examples/matisse.jpg", 3, 1, 25, 0],
 ]
 
 demo = gr.Interface(
