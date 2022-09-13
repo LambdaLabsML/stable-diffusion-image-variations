@@ -31,10 +31,15 @@ def main(
 
 
 description = \
-"""Generate variations on an input image using a fine-tuned version of Stable Diffision.
+"""
+__This demo is currently running on CPU only, so takes a looooooong time, a GPU will be added in the near future!
+In the meantime test out the version [here](https://47725.gradio.app/).__
+
+Generate variations on an input image using a fine-tuned version of Stable Diffision.
 Trained by [Justin Pinkney](https://www.justinpinkney.com) ([@Buntworthy](https://twitter.com/Buntworthy)) at [Lambda](https://lambdalabs.com/)
 
-__Get the [code](https://github.com/justinpinkney/stable-diffusion) and [model](https://huggingface.co/lambdalabs/stable-diffusion-image-conditioned).__
+This version has been ported to 🤗 Diffusers library, see more details on how to use this version in the [Lambda Diffusers repo](https://github.com/LambdaLabsML/lambda-diffusers).
+__For the original training code see [this repo](https://github.com/justinpinkney/stable-diffusion).
 
 ![](https://raw.githubusercontent.com/justinpinkney/stable-diffusion/main/assets/im-vars-thin.jpg)
 
