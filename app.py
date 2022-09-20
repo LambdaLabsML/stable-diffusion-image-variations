@@ -32,9 +32,6 @@ def main(
 
 description = \
 """
-__This demo is currently running on CPU only, so takes a looooooong time, a GPU will be added in the near future!
-In the meantime test out the version [here](https://47725.gradio.app/).__
-
 Generate variations on an input image using a fine-tuned version of Stable Diffision.
 Trained by [Justin Pinkney](https://www.justinpinkney.com) ([@Buntworthy](https://twitter.com/Buntworthy)) at [Lambda](https://lambdalabs.com/)
 
