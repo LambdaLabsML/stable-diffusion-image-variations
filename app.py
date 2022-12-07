@@ -2,7 +2,7 @@ import gradio as gr
 import torch
 from PIL import Image
 
-from lambda_diffusers import StableDiffusionImageEmbedPipeline
+from diffusers import StableDiffusionImageVariationPipeline
 
 def main(
     input_im,
@@ -21,7 +21,7 @@ def main(
         )
 
     images = []
-    for i, image in enumerate(images_list["sample"]):
+    for i, image in enumerate(images_list["images"]):
         if(images_list["nsfw_content_detected"][i]):
             safe_image = Image.open(r"unsafe.png")
             images.append(safe_image)
@@ -57,9 +57,8 @@ More details on the method and training will come in a future blog post.
 """
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-pipe = StableDiffusionImageEmbedPipeline.from_pretrained(
+pipe = StableDiffusionImageVariationPipeline.from_pretrained(
     "lambdalabs/sd-image-variations-diffusers",
-    revision="273115e88df42350019ef4d628265b8c29ef4af5",
     )
 pipe = pipe.to(device)
 
