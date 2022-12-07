@@ -67,7 +67,7 @@ inputs = [
     gr.Slider(0, 25, value=3, step=1, label="Guidance scale"),
     gr.Slider(1, 4, value=1, step=1, label="Number images"),
     gr.Slider(5, 50, value=25, step=5, label="Steps"),
-    gr.Number(0, labal="Seed", precision=0)
+    gr.Number(0, label="Seed", precision=0)
 ]
 output = gr.Gallery(label="Generated variations")
 output.style(grid=2)
