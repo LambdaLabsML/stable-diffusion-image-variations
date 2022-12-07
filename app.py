@@ -1,6 +1,7 @@
 import gradio as gr
 import torch
 from PIL import Image
+from torchvision import transforms
 
 from diffusers import StableDiffusionImageVariationPipeline
 
@@ -13,8 +14,21 @@ def main(
     ):
     generator = torch.Generator(device=device).manual_seed(int(seed))
 
+    tform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Resize(
+        (224, 224),
+        interpolation=transforms.InterpolationMode.BICUBIC,
+        antialias=False,
+        ),
+        transforms.Normalize(
+          [0.48145466, 0.4578275, 0.40821073],
+          [0.26862954, 0.26130258, 0.27577711]),
+    ])
+    inp = tform(input_im).to(device)
+        
     images_list = pipe(
-        n_samples*[input_im],
+        inp.tile(n_samples, 1, 1, 1),
         guidance_scale=scale,
         num_inference_steps=steps,
         generator=generator,
