@@ -111,7 +111,7 @@ demo = gr.Interface(
 )
 
 # without rayserve
-demo.launch()
+# demo.launch()
 
 # With rayserve
 num_replicas = (
