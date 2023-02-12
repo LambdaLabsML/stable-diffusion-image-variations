@@ -1,5 +1,10 @@
-diffusers
-transformers
+diffusers==0.12.1
+transformers==4.26.1
 --extra-index-url https://download.pytorch.org/whl/cu113 
-torch
-torchvision
+torch==1.12.1
+torchvision==0.13.1
+gradio==3.5
+ray[serve]==2.2.0
+fastapi==0.88.0
+httpx==0.23.1
+starlette==0.22.0

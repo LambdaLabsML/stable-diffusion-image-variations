@@ -2,8 +2,9 @@ import gradio as gr
 import torch
 from PIL import Image
 from torchvision import transforms
-
+from ray.serve.gradio_integrations import GradioServer
 from diffusers import StableDiffusionImageVariationPipeline
+
 
 def main(
     input_im,
@@ -11,41 +12,48 @@ def main(
     n_samples=4,
     steps=25,
     seed=0,
-    ):
+):
     generator = torch.Generator(device=device).manual_seed(int(seed))
 
-    tform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Resize(
-        (224, 224),
-        interpolation=transforms.InterpolationMode.BICUBIC,
-        antialias=False,
-        ),
-        transforms.Normalize(
-          [0.48145466, 0.4578275, 0.40821073],
-          [0.26862954, 0.26130258, 0.27577711]),
-    ])
+    tform = transforms.Compose(
+        [
+            transforms.ToTensor(),
+            transforms.Resize(
+                (224, 224),
+                interpolation=transforms.InterpolationMode.BICUBIC,
+                antialias=False,
+            ),
+            transforms.Normalize(
+                [0.48145466, 0.4578275, 0.40821073],
+                [0.26862954, 0.26130258, 0.27577711],
+            ),
+        ]
+    )
     inp = tform(input_im).to(device)
-        
+
     images_list = pipe(
         inp.tile(n_samples, 1, 1, 1),
         guidance_scale=scale,
         num_inference_steps=steps,
         generator=generator,
-        )
+    )
 
     images = []
     for i, image in enumerate(images_list["images"]):
-        if(images_list["nsfw_content_detected"][i]):
+        if images_list["nsfw_content_detected"][i]:
             safe_image = Image.open(r"unsafe.png")
             images.append(safe_image)
         else:
             images.append(image)
+
+    torch.cuda.empty_cache()
     return images
 
 
-description = \
-"""
+description = """
+
+### Running on [Lambda Cloud A10 GPU Instances](https://lambdalabs.com/service/gpu-cloud)
+
 __Now using Image Variations v2!__
 
 Generate variations on an input image using a fine-tuned version of Stable Diffision.
@@ -58,8 +66,7 @@ For the original training code see [this repo](https://github.com/justinpinkney/
 
 """
 
-article = \
-"""
+article = """
 ## How does this work?
 
 The normal Stable Diffusion model is trained to be conditioned on text input. This version has had the original text encoder (from CLIP) removed, and replaced with
@@ -75,7 +82,7 @@ More details are on the [model card](https://huggingface.co/lambdalabs/sd-image-
 device = "cuda" if torch.cuda.is_available() else "cpu"
 pipe = StableDiffusionImageVariationPipeline.from_pretrained(
     "lambdalabs/sd-image-variations-diffusers",
-    )
+)
 pipe = pipe.to(device)
 
 inputs = [
@@ -83,7 +90,7 @@ inputs = [
     gr.Slider(0, 25, value=3, step=1, label="Guidance scale"),
     gr.Slider(1, 4, value=1, step=1, label="Number images"),
     gr.Slider(5, 50, value=25, step=5, label="Steps"),
-    gr.Number(0, label="Seed", precision=0)
+    gr.Number(0, label="Seed", precision=0),
 ]
 output = gr.Gallery(label="Generated variations")
 output.style(grid=2)
@@ -101,5 +108,17 @@ demo = gr.Interface(
     inputs=inputs,
     outputs=output,
     examples=examples,
-    )
+)
+
+# without rayserve
 demo.launch()
+
+# With rayserve
+num_replicas = (
+    os.getenv("DEMO_NUM_REPLICAS")
+    if "DEMO_NUM_REPLICAS" in os.environ
+    else torch.cuda.device_count()
+)
+app = GradioServer.options(
+    num_replicas=num_replicas, ray_actor_options={"num_gpus": 1.0, "num_cpus": 16.0}
+).bind(demo)
